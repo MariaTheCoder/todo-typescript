@@ -36,6 +36,14 @@ function addListItem(task: Task) {
   const item = document.createElement('li');
   const label = document.createElement('label');
   const checkbox = document.createElement('input');
+
+  // add eventlistniner to the event 'change' for checkboxes
+  // when toggling whether a checkbox is checked or not in the document
+  // then also change the value of task.completed
+  checkbox.addEventListener('change', () => {
+    task.completed = checkbox.checked;
+  });
+
   checkbox.type = 'checkbox';
   checkbox.checked = task.completed;
   label.append(checkbox, task.title);
