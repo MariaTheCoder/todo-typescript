@@ -69,6 +69,9 @@ function addListItem(task: Task) {
   const label = document.createElement('label');
   const checkbox = document.createElement('input');
 
+  // create icons
+  const edit = document.createElement('i');
+
   // add eventlistniner to the event 'change' for checkboxes
   // when toggling whether a checkbox is checked or not in the document
   // then also change the value of task.completed
@@ -79,8 +82,9 @@ function addListItem(task: Task) {
 
   checkbox.type = 'checkbox';
   checkbox.checked = task.completed;
+  edit.innerText = '🖍️';
   label.append(checkbox, task.title);
-  item.append(label);
+  item.append(label, edit);
   list?.append(item);
 }
 
