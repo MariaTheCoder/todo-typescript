@@ -5,6 +5,7 @@ type Task = {
   title: string;
   completed: boolean;
   createdAt: Date;
+  isInEditMode: boolean;
 };
 
 const list = document.querySelector<HTMLUListElement>('#list');
@@ -52,6 +53,7 @@ function renderTodos() {
     title: input?.value,
     completed: false,
     createdAt: new Date(),
+    isInEditMode: false,
   };
 
   tasks.push(newTask);
@@ -80,6 +82,11 @@ function addListItem(task: Task) {
     saveToLocalStorage();
   });
 
+  edit.addEventListener('click', () => {
+    task.isInEditMode = true;
+    saveToLocalStorage();
+  });
+
   checkbox.type = 'checkbox';
   checkbox.checked = task.completed;
   edit.innerText = '🖍️';
@@ -93,6 +100,7 @@ Save to-dos to local storage
 */
 function saveToLocalStorage() {
   localStorage.setItem('TASKS', JSON.stringify(tasks));
+  console.log(tasks);
 }
 
 /*
