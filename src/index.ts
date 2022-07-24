@@ -10,14 +10,41 @@ type Task = {
 const list = document.querySelector<HTMLUListElement>('#list');
 const form = document.querySelector<HTMLFormElement>('#new-task-form');
 const input = document.querySelector<HTMLInputElement>('#new-task-title');
+const clearTasks = document.querySelector<HTMLButtonElement>('#clear-tasks');
 
-// local storage of tasks so we can always return again later
-const tasks: Task[] = loadTasks();
+/* 
+Make use of local storage of tasks.
+By default, load all stored tasks and display in the document.
+*/
+let tasks: Task[] = loadLocalStorage();
 tasks.forEach(addListItem);
 
+/*
+Add an event listener to the form element 
+*/
 form?.addEventListener('submit', (e) => {
   e.preventDefault();
 
+  renderTodos();
+});
+
+/*
+Add an event listener to the clearTasks button
+*/
+clearTasks?.addEventListener('click', () => {
+  clearLocalStorage();
+  tasks = [];
+
+  if (list == null) return;
+  list.innerHTML = '';
+
+  renderTodos();
+});
+
+/*
+Create a render function which can be accessed from anywhere in this file
+*/
+function renderTodos() {
   if (input?.value == '' || input?.value == null) return;
 
   const newTask: Task = {
@@ -28,12 +55,15 @@ form?.addEventListener('submit', (e) => {
   };
 
   tasks.push(newTask);
-  saveTasks();
+  saveToLocalStorage();
 
   addListItem(newTask);
   input.value = '';
-});
+}
 
+/*
+Add new task to the list in the document
+*/
 function addListItem(task: Task) {
   const item = document.createElement('li');
   const label = document.createElement('label');
@@ -44,7 +74,7 @@ function addListItem(task: Task) {
   // then also change the value of task.completed
   checkbox.addEventListener('change', () => {
     task.completed = checkbox.checked;
-    saveTasks();
+    saveToLocalStorage();
   });
 
   checkbox.type = 'checkbox';
@@ -54,14 +84,27 @@ function addListItem(task: Task) {
   list?.append(item);
 }
 
-function saveTasks() {
+/*
+Save to-dos to local storage
+*/
+function saveToLocalStorage() {
   localStorage.setItem('TASKS', JSON.stringify(tasks));
 }
 
-function loadTasks(): Task[] {
+/*
+Load to-dos from the local storage
+*/
+function loadLocalStorage(): Task[] {
   const taskJSON = localStorage.getItem('TASKS');
 
   if (taskJSON == null) return [];
 
   return JSON.parse(taskJSON);
+}
+
+/*
+Clear local storage
+*/
+function clearLocalStorage() {
+  localStorage.clear();
 }
