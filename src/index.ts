@@ -11,6 +11,9 @@ const list = document.querySelector<HTMLUListElement>('#list');
 const form = document.querySelector<HTMLFormElement>('#new-task-form');
 const input = document.querySelector<HTMLInputElement>('#new-task-title');
 
+// local storage of tasks so we can always return again later
+const tasks: Task[] = [];
+
 form?.addEventListener('submit', (e) => {
   e.preventDefault();
 
@@ -22,6 +25,8 @@ form?.addEventListener('submit', (e) => {
     completed: false,
     createdAt: new Date(),
   };
+
+  tasks.push(newTask);
 
   addListItem(newTask);
   input.value = '';
